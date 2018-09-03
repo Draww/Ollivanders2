@@ -6,12 +6,14 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.ArrayList;
 
+import net.pottercraft.Ollivanders2.Effect.LYCANTHROPY;
+import net.pottercraft.Ollivanders2.Effect.O2EffectType;
 import net.pottercraft.Ollivanders2.GsonDataPersistenceLayer;
 import net.pottercraft.Ollivanders2.OPlayer;
 import net.pottercraft.Ollivanders2.Ollivanders2;
-import net.pottercraft.Ollivanders2.Ollivanders2Common;
 import net.pottercraft.Ollivanders2.Spell.Spells;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 
 /**
  * O2Players
@@ -46,6 +48,7 @@ public class O2Players
    private String animagusColorLabel = "Animagus_Color";
    private String muggleLabel = "Muggle";
    private String yearLabel = "Year";
+   private String lycanthropyLabel = "Lycanthropy";
 
    /**
     * Constructor
@@ -61,7 +64,7 @@ public class O2Players
     * Add a new O2Player.
     *
     * @param pid the UUID of this player
-    * @param name the name of this player
+    * @param name the effectType of this player
     */
    public void addPlayer (UUID pid, String name)
    {
@@ -154,56 +157,6 @@ public class O2Players
       else
       {
          p.getLogger().info("No saved O2Players.");
-      }
-   }
-
-   /**
-    * Write the binary serialization file for the original Ollivanders plugin
-    * @param OPlayerMap a map of all players as OPlayer type
-    */
-   @Deprecated
-   private void updateLegacyPlayers (Map<UUID, OPlayer> OPlayerMap)
-   {
-      for (Entry <UUID, OPlayer> e : OPlayerMap.entrySet())
-      {
-         UUID pid = e.getKey();
-         if (O2PlayerMap.containsKey(pid))
-         {
-            continue;
-         }
-
-         String playerName = p.getServer().getOfflinePlayer(pid).getName();
-         if (playerName == null)
-         {
-            continue;
-         }
-
-         OPlayer player = e.getValue();
-
-         O2Player o2p = new O2Player(pid, playerName, p);
-
-         o2p.setSouls(player.getSouls());
-         o2p.setInvisible(player.isInvisible());
-         o2p.setInRepelloMuggleton(player.isMuggleton());
-         o2p.setWandSpell(player.getSpell());
-
-         Map <Spells, Integer> spells = player.getSpellCount();
-         for (Entry<Spells, Integer> s : spells.entrySet())
-         {
-            Spells spell = s.getKey();
-            int count = s.getValue();
-
-            if (count > 0)
-            {
-               o2p.setSpellCount(spell, count);
-            }
-         }
-
-         O2PlayerMap.put(pid, o2p);
-         if (Ollivanders2.debug)
-         {
-            p.getLogger().info("Loaded player " + o2p.getPlayerName());
-         }
       }
    }
 
@@ -308,18 +261,6 @@ public class O2Players
          }
 
          /**
-          * Spell Experience
-          */
-         Map<Spells, Integer> spells = o2p.getKnownSpells();
-         if (spells != null)
-         {
-            for (Entry<Spells, Integer> s : spells.entrySet())
-            {
-               playerData.put(s.getKey().toString(), s.getValue().toString());
-            }
-         }
-
-         /**
           * Muggle
           */
          if (!o2p.isMuggle())
@@ -333,6 +274,27 @@ public class O2Players
           */
          Integer year = O2PlayerCommon.yearToInt(o2p.getYear());
          playerData.put(yearLabel, year.toString());
+
+         /**
+          * Lycanthropy
+          */
+         if (o2p.hasEffect(O2EffectType.LYCANTHROPY))
+         {
+            Integer duration = 5;
+            playerData.put(lycanthropyLabel, duration.toString());
+         }
+
+         /**
+          * Spell Experience
+          */
+         Map<Spells, Integer> spells = o2p.getKnownSpells();
+         if (spells != null)
+         {
+            for (Entry<Spells, Integer> s : spells.entrySet())
+            {
+               playerData.put(s.getKey().toString(), s.getValue().toString());
+            }
+         }
 
          serializedMap.put(pid.toString(), playerData);
       }
@@ -382,14 +344,14 @@ public class O2Players
             continue;
          }
 
-         // get player name
+         // get player effectType
          String playerName = playerData.get(nameLabel);
          if (playerName == null || playerName.length() < 1)
          {
             continue;
          }
 
-         O2Player player = new O2Player(pid, playerName, p);
+         O2Player o2p = new O2Player(pid, playerName, p);
 
          for (Entry<String, String> data : playerData.entrySet())
          {
@@ -402,18 +364,18 @@ public class O2Players
             }
             else if (label.equalsIgnoreCase(woodLabel))
             {
-               player.setWandWood(value);
+               o2p.setWandWood(value);
             }
             else if (label.equalsIgnoreCase(coreLabel))
             {
-               player.setWandCore(value);
+               o2p.setWandCore(value);
             }
             else if (label.equalsIgnoreCase(soulsLabel))
             {
                Integer souls = p.common.integerFromString(value);
                if (souls != null)
                {
-                  player.setSouls(souls);
+                  o2p.setSouls(souls);
                }
             }
             else if (label.equalsIgnoreCase(inMuggletonLabel))
@@ -421,7 +383,7 @@ public class O2Players
                Boolean muggleton = p.common.booleanFromString(value);
                if (muggleton != null)
                {
-                  player.setInRepelloMuggleton(muggleton);
+                  o2p.setInRepelloMuggleton(muggleton);
                }
             }
             else if (label.equalsIgnoreCase(invisibleLabel))
@@ -429,7 +391,7 @@ public class O2Players
                Boolean invisible = p.common.booleanFromString(value);
                if (invisible != null)
                {
-                  player.setInvisible(invisible);
+                  o2p.setInvisible(invisible);
                }
             }
             else if (label.equalsIgnoreCase(foundWandLabel))
@@ -437,7 +399,7 @@ public class O2Players
                Boolean foundWand = p.common.booleanFromString(value);
                if (foundWand != null)
                {
-                  player.setFoundWand(foundWand);
+                  o2p.setFoundWand(foundWand);
                }
             }
             else if (label.equalsIgnoreCase(masterSpellLabel))
@@ -445,7 +407,7 @@ public class O2Players
                Spells spell = Spells.spellsFromString(value);
                if (spell != null)
                {
-                  player.setMasterSpell(spell);
+                  o2p.setMasterSpell(spell);
                }
             }
             else if (label.equalsIgnoreCase(animagusLabel))
@@ -453,17 +415,19 @@ public class O2Players
                EntityType animagus = p.common.entityTypeFromString(value);
                if (animagus != null)
                {
-                  player.setAnimagusForm(animagus);
+                  o2p.setAnimagusForm(animagus);
                }
             }
             else if (label.equalsIgnoreCase(animagusColorLabel))
             {
-               player.setAnimagusColor(value);
-            } else if (label.equalsIgnoreCase(muggleLabel)) {
+               o2p.setAnimagusColor(value);
+            }
+            else if (label.equalsIgnoreCase(muggleLabel))
+            {
                Boolean muggle = p.common.booleanFromString(value);
                if (muggle != null)
                {
-                  player.setMuggle(muggle);
+                  o2p.setMuggle(muggle);
                }
             }
             else if (label.equalsIgnoreCase(yearLabel))
@@ -471,7 +435,15 @@ public class O2Players
                Integer year = p.common.integerFromString(value);
                if (year != null)
                {
-                  player.setYear(O2PlayerCommon.intToYear(year));
+                  o2p.setYear(O2PlayerCommon.intToYear(year));
+               }
+            }
+            else if (label.equalsIgnoreCase(lycanthropyLabel))
+            {
+               Integer duration = p.common.integerFromString(value);
+               if (duration != null)
+               {
+                  o2p.addJoinEffect(O2EffectType.LYCANTHROPY, duration);
                }
             }
             else
@@ -486,14 +458,14 @@ public class O2Players
                Integer count = p.common.integerFromString(value);
                if (count != null)
                {
-                  player.setSpellCount(spell, count);
+                  o2p.setSpellCount(spell, count);
                }
             }
          }
 
-         deserializedMap.put(pid, player);
+         deserializedMap.put(pid, o2p);
          if (Ollivanders2.debug)
-            p.getLogger().info("Loaded player " + player.getPlayerName());
+            p.getLogger().info("Loaded player " + o2p.getPlayerName());
       }
 
       return deserializedMap;

@@ -12,7 +12,7 @@ public class WOLFSBANE_POTION extends O2Effect
     * @param effect the effect cast
     * @param duration the duration of the effect
     */
-   public WOLFSBANE_POTION (Ollivanders2 plugin, O2EffectType effect, int duration, Player player)
+   public WOLFSBANE_POTION (Ollivanders2 plugin, O2EffectType effect, Integer duration, Player player)
    {
       super(plugin, effect, duration, player);
    }

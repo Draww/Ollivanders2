@@ -19,9 +19,8 @@ import org.bukkit.entity.Player;
  * @author Azami7
  * @since 2.2.8
  */
-public abstract class SHAPE_SHIFT extends O2Effect
+public abstract class ShapeShiftSuper extends O2Effect
 {
-   boolean permanent = false;
    boolean transformed = false;
 
    TargetedDisguise disguise;
@@ -36,7 +35,7 @@ public abstract class SHAPE_SHIFT extends O2Effect
     * @param duration the duration of the effect
     * @param player the player this effect acts on
     */
-   public SHAPE_SHIFT (Ollivanders2 plugin, O2EffectType effect, int duration, Player player)
+   public ShapeShiftSuper (Ollivanders2 plugin, O2EffectType effect, int duration, Player player)
    {
       super(plugin, effect, duration, player);
    }
@@ -60,10 +59,15 @@ public abstract class SHAPE_SHIFT extends O2Effect
          age(1);
       }
 
-      if (!transformed && !kill)
-      {
-         transform();
-      }
+      upkeep();
+   }
+
+   /**
+    * Do the upkeep for this specific shape shift effect.
+    */
+   protected void upkeep ()
+   {
+      // by default, do nothing, this needs to be written in the child classes
    }
 
    /**
@@ -95,6 +99,16 @@ public abstract class SHAPE_SHIFT extends O2Effect
    @Override
    public void kill ()
    {
+      restore();
+
+      kill = true;
+   }
+
+   /**
+    * Restore the player back to their human form.
+    */
+   protected void restore ()
+   {
       if (transformed)
       {
          if (disguise != null)
@@ -112,8 +126,6 @@ public abstract class SHAPE_SHIFT extends O2Effect
 
          transformed = false;
       }
-
-      kill = true;
    }
 
    /**

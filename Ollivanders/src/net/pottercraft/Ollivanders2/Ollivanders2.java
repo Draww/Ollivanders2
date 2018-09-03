@@ -20,6 +20,8 @@ import java.util.UUID;
 import Quidditch.Arena;
 
 import net.pottercraft.Ollivanders2.Book.O2Books;
+import net.pottercraft.Ollivanders2.Effect.O2Effect;
+import net.pottercraft.Ollivanders2.Effect.O2EffectType;
 import net.pottercraft.Ollivanders2.House.O2Houses;
 import net.pottercraft.Ollivanders2.House.O2HouseType;
 import net.pottercraft.Ollivanders2.Player.O2Player;
@@ -430,6 +432,10 @@ public class Ollivanders2 extends JavaPlugin
          {
             return runYear(sender, args);
          }
+         else if (subCommand.equalsIgnoreCase("effect"))
+         {
+            return runEffect(sender, args);
+         }
       }
 
       usageMessageOllivanders(sender);
@@ -463,6 +469,27 @@ public class Ollivanders2 extends JavaPlugin
          if (masterSpell != null)
          {
             summary = summary + "\nMaster Spell: " + common.enumRecode(masterSpell.toString().toLowerCase());
+         }
+
+         summary = summary + "\n";
+      }
+
+      // effects
+      if (isOp(sender))
+      {
+         List<O2Effect> effects = o2Player.getEffects();
+         summary = summary + "\nAffected by:\n";
+
+         if (effects == null || effects.isEmpty())
+         {
+            summary = summary + "Nothing";
+         }
+         else
+         {
+            for (O2Effect effect : effects)
+            {
+               summary = summary + effect.effectType.toString() + "\n";
+            }
          }
 
          summary = summary + "\n";
@@ -640,7 +667,7 @@ public class Ollivanders2 extends JavaPlugin
             return true;
          }
 
-         sender.sendMessage(chatColor + "Invalid house name '" + targetHouse + "'");
+         sender.sendMessage(chatColor + "Invalid house effectType '" + targetHouse + "'");
       }
 
       String houseNames = "";
@@ -662,7 +689,7 @@ public class Ollivanders2 extends JavaPlugin
    /**
     * Sorts a player in to a specific house.  The player will not be sorted if:
     * a) the player is not online
-    * b) an invalid house name is specified
+    * b) an invalid house effectType is specified
     * c) they have already been sorted
     *
     * @param sender the player that issued the command
@@ -693,7 +720,7 @@ public class Ollivanders2 extends JavaPlugin
 
       if (house == null)
       {
-         sender.sendMessage(chatColor + targetHouse + " is not a valid house name.");
+         sender.sendMessage(chatColor + targetHouse + " is not a valid house effectType.");
 
          return true;
       }
@@ -783,7 +810,7 @@ public class Ollivanders2 extends JavaPlugin
             if (houseType == null)
             {
                if (debug)
-                  getLogger().info("runHousePoints: invalid house name '" + h + "'");
+                  getLogger().info("runHousePoints: invalid house effectType '" + h + "'");
 
                usageMessageHousePoints(sender);
                return true;
@@ -1037,6 +1064,67 @@ public class Ollivanders2 extends JavaPlugin
    }
 
    /**
+    * The effects command, this is for testing purposes only and is not listed in the usage message.
+    *
+    * @param sender the player that issued the command
+    * @param args the arguments for the command, if any
+    * @return true unless an error occurred
+    */
+   private boolean runEffect (CommandSender sender, String[] args)
+   {
+      // olli effect <effect>
+      if (args.length >= 2)
+      {
+         String [] subArgs = Arrays.copyOfRange(args, 1, args.length);
+         String effectName = common.stringArrayToString(subArgs).toUpperCase();
+
+         O2EffectType effectType;
+         try
+         {
+            effectType = O2EffectType.valueOf(effectName);
+         }
+         catch (Exception e)
+         {
+            sender.sendMessage(chatColor + "No effect named " + effectName + ".\n");
+            return true;
+         }
+
+         O2Player o2p = getO2Player((Player)sender);
+         if (o2p.hasEffect(effectType))
+         {
+            o2p.removeEffect(effectType);
+            sender.sendMessage(chatColor + "Removed " + effectName + " from " + sender + ".\n");
+         }
+         else
+         {
+            Class effectClass = effectType.getClassName();
+            getLogger().info("Trying to add effect " + effectClass);
+
+            O2Effect effect = null;
+            try
+            {
+               effect = (O2Effect)effectClass.getConstructor(Ollivanders2.class, O2EffectType.class, Integer.class, Player.class).newInstance(this, effectType, 1200, sender);
+            }
+            catch (Exception e)
+            {
+               sender.sendMessage(chatColor + "Failed to add effect " + effectName + " to " + sender + ".\n");
+               e.printStackTrace();
+               return true;
+            }
+
+            o2p.addEffect(effect);
+            sender.sendMessage(chatColor + "Added " + effectName + " to " + sender + ".\n");
+         }
+      }
+      else
+      {
+         sender.sendMessage(chatColor + "Not enough arguments to /olli effect.\n");
+      }
+
+      return true;
+   }
+
+   /**
     * The quidditch setup command.
     *
     * @param sender the player that issued the command
@@ -1061,7 +1149,7 @@ public class Ollivanders2 extends JavaPlugin
       }
       else
       {
-         sender.sendMessage(chatColor + "Please include a name for your arena.");
+         sender.sendMessage(chatColor + "Please include a effectType for your arena.");
       }
       return true;
    }
@@ -1642,7 +1730,7 @@ public class Ollivanders2 extends JavaPlugin
       }
       else if (args[1].equalsIgnoreCase("give"))
       {
-         // olli books give <player> <book name>
+         // olli books give <player> <book effectType>
          if (args.length < 4)
          {
             usageMessageBooks(sender);
@@ -1663,7 +1751,7 @@ public class Ollivanders2 extends JavaPlugin
                getLogger().info("player to give book to is " + targetName);
          }
 
-         // args after "book give <player>" are book name
+         // args after "book give <player>" are book effectType
          String [] subArgs = Arrays.copyOfRange(args, 3, args.length);
          ItemStack bookItem = getBookFromArgs(subArgs, sender);
 
@@ -1809,10 +1897,10 @@ public class Ollivanders2 extends JavaPlugin
       sender.sendMessage(chatColor
             + "Usage: /olli potions"
             + "\ningredient list - lists all potions ingredients"
-            + "\ningredient <ingredient name> - give you the ingredient with this name, if it exists"
+            + "\ningredient <ingredient effectType> - give you the ingredient with this effectType, if it exists"
             + "\nall - gives all Ollivanders2 potions, this may not fit in your inventory"
-            //+ "\n<potion name> - gives you the potion with this name, if it exists"
-            //+ "\ngive <player> <potion name> - gives target player the potion with this name, if it exists\n"
+            //+ "\n<potion effectType> - gives you the potion with this effectType, if it exists"
+            //+ "\ngive <player> <potion effectType> - gives target player the potion with this effectType, if it exists\n"
             + "\nExample: /ollivanders2 potions all"
             + "\nExample: /ollivanders2 potions ingredient list");
    }
@@ -1843,7 +1931,7 @@ public class Ollivanders2 extends JavaPlugin
     * Give a potion ingredient to a player.
     *
     * @param player the player to give the ingredient to
-    * @param name the name of the ingredient
+    * @param name the effectType of the ingredient
     * @return true
     */
    private boolean givePotionIngredient(Player player, String name)

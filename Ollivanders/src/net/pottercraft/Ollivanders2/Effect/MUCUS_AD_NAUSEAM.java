@@ -17,7 +17,7 @@ public class MUCUS_AD_NAUSEAM extends O2Effect
     * @param duration the duration of the effect
     * @param player the player this effect acts on
     */
-   public MUCUS_AD_NAUSEAM (Ollivanders2 plugin, O2EffectType effect, int duration, Player player)
+   public MUCUS_AD_NAUSEAM (Ollivanders2 plugin, O2EffectType effect, Integer duration, Player player)
    {
       super(plugin, effect, duration, player);
    }

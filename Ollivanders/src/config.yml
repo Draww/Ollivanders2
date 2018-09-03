@@ -27,13 +27,13 @@ broomstick: STICK
 # IMPORTANT: Enabling houses will take over your server's main scoreboard.  If you do not want this, you must
 # set this to false.
 houses: false
-# If houses are enabled, you can change the name of them in the game by uncommenting and editing
+# If houses are enabled, you can change the effectType of them in the game by uncommenting and editing
 # gryffindorName: Gryffindor
 # hufflepuffName: Hufflepuff
 # ravenclawName: Ravenclaw
 # slytherinName: Slytherin
 #
-# If houses are enabled, you can change the color for player name tags and chat by uncommenting and editing
+# If houses are enabled, you can change the color for player effectType tags and chat by uncommenting and editing
 # Options are: WHITE, GRAY, RED, GOLD, YELLOW, GREEN, AQUA, BLUE, LIGHT_PURPLE, DARK_GRAY, DARK_RED, DARK_AQUA, DARK_BLUE, DARK_PURPLE
 # gryffindorColor: DARK_RED
 # hufflepuffColor: GOLD

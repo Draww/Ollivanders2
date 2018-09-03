@@ -1,9 +1,10 @@
 package net.pottercraft.Ollivanders2;
 
 import net.pottercraft.Ollivanders2.Book.O2Books;
+import net.pottercraft.Ollivanders2.Effect.LYCANTHROPY_SPEECH;
 import net.pottercraft.Ollivanders2.Effect.O2Effect;
 import net.pottercraft.Ollivanders2.Effect.SILENCIO;
-import net.pottercraft.Ollivanders2.Effect.BABBLING_EFFECT;
+import net.pottercraft.Ollivanders2.Effect.BABBLING;
 import net.pottercraft.Ollivanders2.Effect.LYCANTHROPY;
 import net.pottercraft.Ollivanders2.Effect.O2EffectType;
 import net.pottercraft.Ollivanders2.Player.O2Player;
@@ -244,13 +245,14 @@ public class OllivandersListener implements Listener
          for (O2Effect effect : effects)
          {
             // If SILENCIO is affecting the player, remove all chat recipients and do not allow a spell cast.
-            if (effect.name == O2EffectType.SILENCIO)
+            if (effect.effectType == O2EffectType.SILENCIO)
             {
                ((SILENCIO)effect).doSilencio(event);
             }
-            else if (effect.name == O2EffectType.BABBLING_EFFECT)
+            else if (effect.effectType == O2EffectType.BABBLING ||
+                     effect.effectType == O2EffectType.LYCANTHROPY_SPEECH)
             {
-               ((BABBLING_EFFECT)effect).doBabblingEffect(event);
+               ((BABBLING)effect).doBabblingEffect(event);
             }
          }
       }
@@ -671,7 +673,7 @@ public class OllivandersListener implements Listener
     * This creates the spell projectile.
     *
     * @param player the player that cast the spell
-    * @param name the name of the spell cast
+    * @param name the effectType of the spell cast
     * @wandC the wand check value for the held wand
     */
    private void createSpellProjectile (Player player, Spells name, double wandC)
@@ -883,6 +885,11 @@ public class OllivandersListener implements Listener
       O2Player o2p = p.getO2Player(player);
       // update player's name if it has changed
       o2p.setPlayerName(player.getName());
+
+      // add effects
+      o2p.onJoinEffects();
+
+      // add them to player list
       p.setO2Player(player, o2p);
 
       // add player to their house team
@@ -942,7 +949,7 @@ public class OllivandersListener implements Listener
                O2Player o2p = p.getO2Player(damaged);
                for (O2Effect effect : o2p.getEffects())
                {
-                  if (effect.name == O2EffectType.LYCANTHROPY)
+                  if (effect.effectType == O2EffectType.LYCANTHROPY)
                   {
                      hasLy = true;
                   }

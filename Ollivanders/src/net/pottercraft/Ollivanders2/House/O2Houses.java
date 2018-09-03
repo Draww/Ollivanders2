@@ -65,7 +65,7 @@ public class O2Houses
     */
    private void readHouseConfig ()
    {
-      // read house name config
+      // read house effectType config
       if (p.getConfig().isSet("gryffindorName"))
          O2HouseType.GRYFFINDOR.setName(p.getConfig().getString("gryffindorName"));
 
@@ -104,10 +104,10 @@ public class O2Houses
    }
 
    /**
-    * Get the house type by name.
+    * Get the house type by effectType.
     *
-    * @param name the name of the house
-    * @return the house type or null if the name is not valid.
+    * @param name the effectType of the house
+    * @return the house type or null if the effectType is not valid.
     */
    public O2HouseType getHouseType(String name)
    {
@@ -559,7 +559,7 @@ public class O2Houses
          team.removeEntry(name);
          if (displayName.startsWith("§"));
          {
-            // we have set a color on their display name, change it back
+            // we have set a color on their display effectType, change it back
             player.setDisplayName(name);
          }
       }

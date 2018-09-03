@@ -40,7 +40,7 @@ public class Arena {
 
     /**
      * @param name
-     *            The name of the arena
+     *            The effectType of the arena
      * @param center
      *            The center of the arena
      */
@@ -53,7 +53,7 @@ public class Arena {
     }
 
     /**
-     * @return The name of the arena
+     * @return The effectType of the arena
      */
     public String getName() {
         return name;
@@ -160,7 +160,7 @@ public class Arena {
 
     @Override
     public String toString() {
-        return "[" + "name=" + name + ", center=" + center + ", size=" + size + "]";
+        return "[" + "effectType=" + name + ", center=" + center + ", size=" + size + "]";
     }
 
     private Boolean isInside(Location location) {

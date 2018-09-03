@@ -22,7 +22,7 @@ public class LEVICORPUS extends O2Effect
     * @param duration the duration of the effect
     * @param player the player this effect acts on
     */
-   public LEVICORPUS (Ollivanders2 plugin, O2EffectType effect, int duration, Player player)
+   public LEVICORPUS (Ollivanders2 plugin, O2EffectType effect, Integer duration, Player player)
    {
       super(plugin, effect, duration, player);
 

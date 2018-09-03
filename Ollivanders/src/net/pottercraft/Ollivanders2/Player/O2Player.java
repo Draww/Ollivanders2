@@ -9,13 +9,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import net.pottercraft.Ollivanders2.Book.INTERMEDIATE_TRANSFIGURATION;
 import net.pottercraft.Ollivanders2.Effect.O2Effect;
 import net.pottercraft.Ollivanders2.Effect.O2EffectType;
+import net.pottercraft.Ollivanders2.Effect.ShapeShiftSuper;
 import net.pottercraft.Ollivanders2.Ollivanders2;
+import net.pottercraft.Ollivanders2.Potion.IngredientType;
 import net.pottercraft.Ollivanders2.Spell.SpellProjectile;
 import net.pottercraft.Ollivanders2.Spell.Spells;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
@@ -33,17 +37,17 @@ import org.bukkit.inventory.meta.BookMeta;
 public class O2Player
 {
    /**
-    * Wand wood material name
+    * Wand wood material effectType
     */
    private String wandWood = null;
 
    /**
-    * Wand core material name
+    * Wand core material effectType
     */
    private String wandCore = null;
 
    /**
-    * Player display name
+    * Player display effectType
     */
    private String playerName = null;
 
@@ -133,10 +137,15 @@ public class O2Player
    private Year year = Year.YEAR_1;
 
    /**
+    * Effects to add to this player at join
+    */
+   private HashMap<O2EffectType, Integer> effectsAtJoin = new HashMap<>();
+
+   /**
     * Constructor.
     *
     * @param id the UUID of the player
-    * @param name the name of the player
+    * @param name the effectType of the player
     * @param plugin a reference to the plugin
     */
    public O2Player (UUID id, String name, Ollivanders2 plugin)
@@ -253,11 +262,11 @@ public class O2Player
    }
 
    /**
-    * Get the name of this player for use in commands like listing out house membership. Since player names
+    * Get the effectType of this player for use in commands like listing out house membership. Since player names
     * can change, this should not be used to identify a player. Instead, use the UUID of player and the O2Players
     * map to find their O2Player object.
     *
-    * @return the player's name
+    * @return the player's effectType
     */
    public String getPlayerName ()
    {
@@ -265,9 +274,9 @@ public class O2Player
    }
 
    /**
-    * Sets the name of this player for use in commands like listing out house membership.
+    * Sets the effectType of this player for use in commands like listing out house membership.
     *
-    * @param name the name to set for this player
+    * @param name the effectType to set for this player
     */
    public void setPlayerName (String name)
    {
@@ -701,10 +710,22 @@ public class O2Player
     */
    public void addEffect (O2Effect e)
    {
-      effects.put(e.name, e);
+      // do not allow multiple shape-shifting effects at the same time
+      if (e instanceof ShapeShiftSuper)
+      {
+         for (O2Effect effect : effects.values())
+         {
+            if (effect instanceof ShapeShiftSuper)
+            {
+               return;
+            }
+         }
+      }
+
+      effects.put(e.effectType, e);
 
       if (Ollivanders2.debug)
-         p.getLogger().info("Adding effect " + e.name.toString() + " to " + playerName);
+         p.getLogger().info("Adding effect " + e.effectType.toString() + " to " + playerName);
    }
 
    /**
@@ -714,7 +735,7 @@ public class O2Player
     */
    public void removeEffect (O2Effect e)
    {
-      removeEffect(e.name);
+      removeEffect(e.effectType);
    }
 
    /**
@@ -724,10 +745,16 @@ public class O2Player
     */
    public void removeEffect (O2EffectType effectType)
    {
-      effects.remove(effectType);
+      O2Effect effect = effects.get(effectType);
 
-      if (Ollivanders2.debug)
-         p.getLogger().info("Removing effect " + effectType.toString() + " to " + playerName);
+      if (effect != null)
+      {
+         effect.kill();
+         effects.remove(effectType);
+
+         if (Ollivanders2.debug)
+            p.getLogger().info("Removing effect " + effectType.toString() + " to " + playerName);
+      }
    }
 
    /**
@@ -1062,5 +1089,52 @@ public class O2Player
    public UUID getID ()
    {
       return pid;
+   }
+
+   /**
+    * Effects to add to this player when they join. Since effects require a Player object, these cannot
+    * be added at plugin load.
+    *
+    * @param effectType the effect type to add
+    * @param duration the duration for this effect
+    */
+   void addJoinEffect (O2EffectType effectType, Integer duration)
+   {
+      if (!effectsAtJoin.containsKey(effectType))
+      {
+         effectsAtJoin.put(effectType, duration);
+      }
+   }
+
+   /**
+    * Effects to add to this player on join.
+    */
+   public void onJoinEffects ()
+   {
+      for (Entry<O2EffectType, Integer> entry : effectsAtJoin.entrySet())
+      {
+         O2EffectType effectType = entry.getKey();
+         Integer duration = entry.getValue();
+
+         Class effectClass = effectType.getClassName();
+         Player player = p.getServer().getPlayer(pid);
+
+         O2Effect effect;
+         try
+         {
+            effect = (O2Effect)effectClass.getConstructor(Ollivanders2.class, O2EffectType.class, Integer.class, Player.class).newInstance(p, effectType, duration, player);
+         }
+         catch (Exception e)
+         {
+            if (Ollivanders2.debug)
+            {
+               p.getLogger().info("Failed to create class for " + effectType.toString());
+               e.printStackTrace();
+            }
+            continue;
+         }
+
+         addEffect(effect);
+      }
    }
 }

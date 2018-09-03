@@ -13,9 +13,10 @@ import org.bukkit.entity.Player;
 public abstract class O2Effect
 {
    Ollivanders2 p;
-   public O2EffectType name;
+   public O2EffectType effectType;
    public int duration;
    public boolean kill;
+   boolean permanent = false;
    Player target;
 
    /**
@@ -26,12 +27,12 @@ public abstract class O2Effect
     * @param duration the length this effect should remain
     * @param player the player this effect acts on
     */
-   public O2Effect (Ollivanders2 plugin, O2EffectType effect, int duration, Player player)
+   public O2Effect (Ollivanders2 plugin, O2EffectType effect, Integer duration, Player player)
    {
       p = plugin;
 
       this.duration = duration;
-      name = effect;
+      effectType = effect;
       kill = false;
       target = player;
    }

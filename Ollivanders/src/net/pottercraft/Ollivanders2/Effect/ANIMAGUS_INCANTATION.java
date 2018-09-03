@@ -19,7 +19,7 @@ public class ANIMAGUS_INCANTATION extends O2Effect
     * @param duration the duration of this effect
     * @param player the player this effect acts on
     */
-   public ANIMAGUS_INCANTATION (Ollivanders2 plugin, O2EffectType effect, int duration, Player player)
+   public ANIMAGUS_INCANTATION (Ollivanders2 plugin, O2EffectType effect, Integer duration, Player player)
    {
       super(plugin, effect, duration, player);
    }

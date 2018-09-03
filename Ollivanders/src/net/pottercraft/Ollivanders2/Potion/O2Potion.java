@@ -43,7 +43,7 @@ public abstract class O2Potion implements Teachable
    protected Map<IngredientType, Integer> ingredients = new HashMap<>();
 
    /**
-    * The name of this potion as it should appear on the bottle.
+    * The effectType of this potion as it should appear on the bottle.
     */
    protected String name = "Water";
 
@@ -110,9 +110,9 @@ public abstract class O2Potion implements Teachable
    }
 
    /**
-    * Get the name of this potion
+    * Get the effectType of this potion
     *
-    * @return the name of the potion
+    * @return the effectType of the potion
     */
    public String getName ()
    {

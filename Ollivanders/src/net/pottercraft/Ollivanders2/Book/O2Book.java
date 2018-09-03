@@ -119,7 +119,7 @@ public abstract class O2Book
          bookContents.add(spell.toString());
       }
 
-      // add the name of all the potions in the book
+      // add the effectType of all the potions in the book
       for (O2PotionType potionType : potions)
       {
          bookContents.add(potionType.toString());
@@ -212,7 +212,7 @@ public abstract class O2Book
     * Turn a spell text word list in to a set of pages that fit in an MC book.
     *
     * O2Book pages cannot be more than 14 lines with ~18 characters per line, 256 characters max
-    * assume 2 lines for spell name, 1 blank line between name and flavor text, 1 blank link between flavor text
+    * assume 2 lines for spell effectType, 1 blank line between effectType and flavor text, 1 blank link between flavor text
     * and description text, means the first page has 9 lines of ~15 characters + continue, subsequent pages are 13
     * lines of ~15 characters + continue.
     *
@@ -284,7 +284,7 @@ public abstract class O2Book
    }
 
    /**
-    * Create the lore for this book. This will contain the name of each spell and is used by bookLearning
+    * Create the lore for this book. This will contain the effectType of each spell and is used by bookLearning
     * to know what spells are in this book.
     *
     * @return a String list of lore

@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
  * @author Azami7
  * @since 2.2.8
  */
-public class ANIMAGUS_EFFECT extends SHAPE_SHIFT
+public class ANIMAGUS_EFFECT extends ShapeShiftSuper
 {
    String colorVariant;
 
@@ -28,7 +28,7 @@ public class ANIMAGUS_EFFECT extends SHAPE_SHIFT
     * @param duration the duration of the effect
     * @param player the player this effect acts on
     */
-   public ANIMAGUS_EFFECT (Ollivanders2 plugin, O2EffectType effect, int duration, Player player)
+   public ANIMAGUS_EFFECT (Ollivanders2 plugin, O2EffectType effect, Integer duration, Player player)
    {
       super(plugin, effect, duration, player);
 
@@ -39,6 +39,18 @@ public class ANIMAGUS_EFFECT extends SHAPE_SHIFT
       colorVariant = o2p.getAnimagusColor();
 
       permanent = true;
+   }
+
+   @Override
+   /**
+    * If the player has not yet transformed, transform them.
+    */
+   protected void upkeep ()
+   {
+      if (!transformed && !kill)
+      {
+         transform();
+      }
    }
 
    /**
