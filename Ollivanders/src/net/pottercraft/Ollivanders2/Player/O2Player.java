@@ -9,12 +9,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
-import net.pottercraft.Ollivanders2.Book.INTERMEDIATE_TRANSFIGURATION;
 import net.pottercraft.Ollivanders2.Effect.O2Effect;
 import net.pottercraft.Ollivanders2.Effect.O2EffectType;
 import net.pottercraft.Ollivanders2.Effect.ShapeShiftSuper;
 import net.pottercraft.Ollivanders2.Ollivanders2;
-import net.pottercraft.Ollivanders2.Potion.IngredientType;
 import net.pottercraft.Ollivanders2.Spell.SpellProjectile;
 import net.pottercraft.Ollivanders2.Spell.Spells;
 import org.bukkit.Material;
@@ -37,17 +35,17 @@ import org.bukkit.inventory.meta.BookMeta;
 public class O2Player
 {
    /**
-    * Wand wood material effectType
+    * Wand wood material name
     */
    private String wandWood = null;
 
    /**
-    * Wand core material effectType
+    * Wand core material name
     */
    private String wandCore = null;
 
    /**
-    * Player display effectType
+    * Player display name
     */
    private String playerName = null;
 
@@ -145,7 +143,7 @@ public class O2Player
     * Constructor.
     *
     * @param id the UUID of the player
-    * @param name the effectType of the player
+    * @param name the name of the player
     * @param plugin a reference to the plugin
     */
    public O2Player (UUID id, String name, Ollivanders2 plugin)
@@ -262,11 +260,11 @@ public class O2Player
    }
 
    /**
-    * Get the effectType of this player for use in commands like listing out house membership. Since player names
+    * Get the name of this player for use in commands like listing out house membership. Since player names
     * can change, this should not be used to identify a player. Instead, use the UUID of player and the O2Players
     * map to find their O2Player object.
     *
-    * @return the player's effectType
+    * @return the player's name
     */
    public String getPlayerName ()
    {
@@ -274,9 +272,9 @@ public class O2Player
    }
 
    /**
-    * Sets the effectType of this player for use in commands like listing out house membership.
+    * Sets the name of this player for use in commands like listing out house membership.
     *
-    * @param name the effectType to set for this player
+    * @param name the name to set for this player
     */
    public void setPlayerName (String name)
    {

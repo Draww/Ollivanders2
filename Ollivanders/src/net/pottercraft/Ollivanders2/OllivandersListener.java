@@ -1,7 +1,6 @@
 package net.pottercraft.Ollivanders2;
 
 import net.pottercraft.Ollivanders2.Book.O2Books;
-import net.pottercraft.Ollivanders2.Effect.LYCANTHROPY_SPEECH;
 import net.pottercraft.Ollivanders2.Effect.O2Effect;
 import net.pottercraft.Ollivanders2.Effect.SILENCIO;
 import net.pottercraft.Ollivanders2.Effect.BABBLING;
@@ -673,7 +672,7 @@ public class OllivandersListener implements Listener
     * This creates the spell projectile.
     *
     * @param player the player that cast the spell
-    * @param name the effectType of the spell cast
+    * @param name the name of the spell cast
     * @wandC the wand check value for the held wand
     */
    private void createSpellProjectile (Player player, Spells name, double wandC)

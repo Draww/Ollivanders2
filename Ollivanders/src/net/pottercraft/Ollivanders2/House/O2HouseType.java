@@ -44,7 +44,7 @@ public enum O2HouseType
    /**
     * Constructor
     *
-    * @param name the display effectType for this house
+    * @param name the display name for this house
     * @param color the chat color for this house
     */
    O2HouseType (String name, ChatColor color)
@@ -73,9 +73,9 @@ public enum O2HouseType
    }
 
    /**
-    * Get the display effectType for this house
+    * Get the display name for this house
     *
-    * @return the effectType of this house
+    * @return the name of this house
     */
    public String getName()
    {
@@ -83,9 +83,9 @@ public enum O2HouseType
    }
 
    /**
-    * Set the display effectType for this house. Should only be done from within the House package.
+    * Set the display name for this house. Should only be done from within the House package.
     *
-    * @param n the display effectType for this house
+    * @param n the display name for this house
     */
    void setName (String n)
    {

@@ -667,7 +667,7 @@ public class Ollivanders2 extends JavaPlugin
             return true;
          }
 
-         sender.sendMessage(chatColor + "Invalid house effectType '" + targetHouse + "'");
+         sender.sendMessage(chatColor + "Invalid house name '" + targetHouse + "'");
       }
 
       String houseNames = "";
@@ -689,7 +689,7 @@ public class Ollivanders2 extends JavaPlugin
    /**
     * Sorts a player in to a specific house.  The player will not be sorted if:
     * a) the player is not online
-    * b) an invalid house effectType is specified
+    * b) an invalid house name is specified
     * c) they have already been sorted
     *
     * @param sender the player that issued the command
@@ -720,7 +720,7 @@ public class Ollivanders2 extends JavaPlugin
 
       if (house == null)
       {
-         sender.sendMessage(chatColor + targetHouse + " is not a valid house effectType.");
+         sender.sendMessage(chatColor + targetHouse + " is not a valid house name.");
 
          return true;
       }
@@ -810,7 +810,7 @@ public class Ollivanders2 extends JavaPlugin
             if (houseType == null)
             {
                if (debug)
-                  getLogger().info("runHousePoints: invalid house effectType '" + h + "'");
+                  getLogger().info("runHousePoints: invalid house name '" + h + "'");
 
                usageMessageHousePoints(sender);
                return true;
@@ -1149,7 +1149,7 @@ public class Ollivanders2 extends JavaPlugin
       }
       else
       {
-         sender.sendMessage(chatColor + "Please include a effectType for your arena.");
+         sender.sendMessage(chatColor + "Please include a name for your arena.");
       }
       return true;
    }
@@ -1730,7 +1730,7 @@ public class Ollivanders2 extends JavaPlugin
       }
       else if (args[1].equalsIgnoreCase("give"))
       {
-         // olli books give <player> <book effectType>
+         // olli books give <player> <book name>
          if (args.length < 4)
          {
             usageMessageBooks(sender);
@@ -1751,7 +1751,7 @@ public class Ollivanders2 extends JavaPlugin
                getLogger().info("player to give book to is " + targetName);
          }
 
-         // args after "book give <player>" are book effectType
+         // args after "book give <player>" are book name
          String [] subArgs = Arrays.copyOfRange(args, 3, args.length);
          ItemStack bookItem = getBookFromArgs(subArgs, sender);
 
@@ -1897,10 +1897,10 @@ public class Ollivanders2 extends JavaPlugin
       sender.sendMessage(chatColor
             + "Usage: /olli potions"
             + "\ningredient list - lists all potions ingredients"
-            + "\ningredient <ingredient effectType> - give you the ingredient with this effectType, if it exists"
+            + "\ningredient <ingredient name> - give you the ingredient with this name, if it exists"
             + "\nall - gives all Ollivanders2 potions, this may not fit in your inventory"
-            //+ "\n<potion effectType> - gives you the potion with this effectType, if it exists"
-            //+ "\ngive <player> <potion effectType> - gives target player the potion with this effectType, if it exists\n"
+            //+ "\n<potion name> - gives you the potion with this name, if it exists"
+            //+ "\ngive <player> <potion name> - gives target player the potion with this name, if it exists\n"
             + "\nExample: /ollivanders2 potions all"
             + "\nExample: /ollivanders2 potions ingredient list");
    }
@@ -1931,7 +1931,7 @@ public class Ollivanders2 extends JavaPlugin
     * Give a potion ingredient to a player.
     *
     * @param player the player to give the ingredient to
-    * @param name the effectType of the ingredient
+    * @param name the name of the ingredient
     * @return true
     */
    private boolean givePotionIngredient(Player player, String name)

@@ -178,7 +178,7 @@ public class PotionParser
     * Checks to find out which recipe is satisfied.
     *
     * @param ingredients - The list of materials on the ground
-    * @return - The effectType of potion that matches the ingredients
+    * @return - The name of potion that matches the ingredients
     */
    private String recipeChecker (Map<Material, Integer> ingredients)
    {
@@ -211,10 +211,10 @@ public class PotionParser
    /**
     * Creates potion and consumes the ingredients.
     *
-    * @param name        - effectType of the recipe that is to be created
+    * @param name        - name of the recipe that is to be created
     * @param ingredients - ingredients in the cauldron
     */
-   //private static void recipeCooker (String effectType, int water, List<Item> ingredients, Block cauldron)
+   //private static void recipeCooker (String name, int water, List<Item> ingredients, Block cauldron)
    private void recipeCooker (String name, List<Item> ingredients, Block cauldron)
    {
       List<ItemStack> recipe = allPotions.get(name);

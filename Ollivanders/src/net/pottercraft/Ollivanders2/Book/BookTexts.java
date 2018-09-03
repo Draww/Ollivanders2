@@ -150,7 +150,7 @@ public final class BookTexts
    /**
     * Get the flavor text for a specific magic.
     *
-    * @param magic the effectType of the magic topic
+    * @param magic the name of the magic topic
     * @return the flavor text for that spell or null if it has none.
     */
    String getFlavorText (String magic)
@@ -166,7 +166,7 @@ public final class BookTexts
    /**
     * Get the description text for a specific magic.
     *
-    * @param magic the effectType of the magic topic
+    * @param magic the name of the magic topic
     * @return the description text for this spell
     */
    String getText (String magic)
@@ -180,10 +180,10 @@ public final class BookTexts
    }
 
    /**
-    * Get the printable effectType for a specific magic.
+    * Get the printable name for a specific magic.
     *
-    * @param magic the effectType of the magic topic
-    * @return the printable effectType for this magic
+    * @param magic the name of the magic topic
+    * @return the printable name for this magic
     */
    public String getName (String magic)
    {

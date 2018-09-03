@@ -119,7 +119,7 @@ public abstract class O2Book
          bookContents.add(spell.toString());
       }
 
-      // add the effectType of all the potions in the book
+      // add the name of all the potions in the book
       for (O2PotionType potionType : potions)
       {
          bookContents.add(potionType.toString());
@@ -284,7 +284,7 @@ public abstract class O2Book
    }
 
    /**
-    * Create the lore for this book. This will contain the effectType of each spell and is used by bookLearning
+    * Create the lore for this book. This will contain the name of each spell and is used by bookLearning
     * to know what spells are in this book.
     *
     * @return a String list of lore

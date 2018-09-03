@@ -200,7 +200,7 @@ public class O2StationarySpells
          Map<String, String> spellData = new HashMap<>();
 
          /**
-          * Spell effectType
+          * Spell name
           */
          spellData.put(spellLabel, spell.name.toString());
 

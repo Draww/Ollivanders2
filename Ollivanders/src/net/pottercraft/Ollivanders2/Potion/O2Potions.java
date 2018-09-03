@@ -216,9 +216,9 @@ public class O2Potions
    }
 
    /**
-    * Get a potion ingredient by effectType.
+    * Get a potion ingredient by name.
     *
-    * @param name the effectType of the ingredient to get
+    * @param name the name of the ingredient to get
     * @return the ingredient item or null if not found
     */
    public ItemStack getIngredientByName (String name)
