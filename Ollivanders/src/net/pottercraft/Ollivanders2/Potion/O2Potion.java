@@ -38,6 +38,11 @@ import org.bukkit.entity.Player;
 public abstract class O2Potion implements Teachable
 {
    /**
+    * The type this potion is.
+    */
+   protected O2PotionType type;
+
+   /**
     * The ingredients list for this potion.
     */
    protected Map<IngredientType, Integer> ingredients = new HashMap<>();
@@ -84,9 +89,10 @@ public abstract class O2Potion implements Teachable
     *
     * @param plugin a callback to the plugin
     */
-   public O2Potion (Ollivanders2 plugin)
+   public O2Potion (Ollivanders2 plugin, O2PotionType potionType)
    {
       p = plugin;
+      type = potionType;
    }
 
    /**
@@ -107,6 +113,15 @@ public abstract class O2Potion implements Teachable
       }
 
       return s;
+   }
+
+   /**
+    * Get the type of this potion.
+    * @return
+    */
+   public O2PotionType getType ()
+   {
+      return type;
    }
 
    /**

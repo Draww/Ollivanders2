@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import net.pottercraft.Ollivanders2.Potion.O2PotionType;
 import net.pottercraft.Ollivanders2.Spell.Spells;
 
 import org.bukkit.Bukkit;
@@ -88,6 +89,10 @@ public class Ollivanders2Common
       add(Spells.LAPIFORS);
       add(Spells.SNUFFLIFORS);
       add(Spells.VERA_VERTO);
+   }};
+
+   public static final ArrayList<O2PotionType> libDisguisesPotions = new ArrayList<O2PotionType>() {{
+      add(O2PotionType.ANIMAGUS_POTION);
    }};
 
    private Ollivanders2 p;
